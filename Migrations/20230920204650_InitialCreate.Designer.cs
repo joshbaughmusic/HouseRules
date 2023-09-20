@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HouseRules.Migrations
 {
     [DbContext(typeof(HouseRulesDbContext))]
-    [Migration("20230920190354_InitialCreate")]
+    [Migration("20230920204650_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,7 +44,7 @@ namespace HouseRules.Migrations
 
                     b.HasIndex("UserProfileId");
 
-                    b.ToTable("ChoreAssignment");
+                    b.ToTable("ChoreAssignments");
 
                     b.HasData(
                         new
@@ -96,7 +96,7 @@ namespace HouseRules.Migrations
 
                     b.HasIndex("UserProfileId");
 
-                    b.ToTable("ChoreCompletion");
+                    b.ToTable("ChoreCompletions");
 
                     b.HasData(
                         new
@@ -135,7 +135,7 @@ namespace HouseRules.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Chore");
+                    b.ToTable("Chores");
 
                     b.HasData(
                         new
@@ -250,7 +250,7 @@ namespace HouseRules.Migrations
                         new
                         {
                             Id = "c3aaeb97-d2ba-4a53-a521-4eea61e59b35",
-                            ConcurrencyStamp = "0910c3cd-007d-459c-be61-b594b8b4ec95",
+                            ConcurrencyStamp = "9f4d3687-1138-4df0-9289-0ef760342134",
                             Name = "Admin",
                             NormalizedName = "admin"
                         });
@@ -349,13 +349,13 @@ namespace HouseRules.Migrations
                         {
                             Id = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "adb93024-70b4-4042-a0ec-9d0951f4b566",
+                            ConcurrencyStamp = "e14b3e5d-4972-43d9-b135-05c7f9872309",
                             Email = "admina@strator.comx",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAELBvP9HfbCu2NL9MCpRIr/aRGoZcRbh/OZ9y5ZK4mISX9sVDn5z0e5rvZNPjuU/aew==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENssA/cyAm9Q+v5Je811KAk/qAdor+Ytm1HJCvLjJxQGNzIZx9SEwKu4j+1b/qx70w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1ec920ce-33c1-4c3f-9219-012d4ae79050",
+                            SecurityStamp = "3cd1c577-9c31-472a-b323-e3111300909a",
                             TwoFactorEnabled = false,
                             UserName = "Administrator"
                         });
@@ -458,7 +458,7 @@ namespace HouseRules.Migrations
                         .IsRequired();
 
                     b.HasOne("HouseRules.Models.UserProfile", "userProfile")
-                        .WithMany()
+                        .WithMany("ChoreAssignments")
                         .HasForeignKey("UserProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -477,7 +477,7 @@ namespace HouseRules.Migrations
                         .IsRequired();
 
                     b.HasOne("HouseRules.Models.UserProfile", "userProfile")
-                        .WithMany()
+                        .WithMany("ChoreCompletions")
                         .HasForeignKey("UserProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -550,6 +550,13 @@ namespace HouseRules.Migrations
                 });
 
             modelBuilder.Entity("HouseRules.Models.Chore", b =>
+                {
+                    b.Navigation("ChoreAssignments");
+
+                    b.Navigation("ChoreCompletions");
+                });
+
+            modelBuilder.Entity("HouseRules.Models.UserProfile", b =>
                 {
                     b.Navigation("ChoreAssignments");
 
