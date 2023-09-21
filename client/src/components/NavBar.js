@@ -39,7 +39,18 @@ export default function NavBar({ loggedInUser, setLoggedInUser }) {
               isOpen={open}
               navbar
             >
-              <Nav navbar></Nav>
+              <Nav navbar>
+                <NavItem>
+                  {loggedInUser.roles.includes('Admin') && (
+                    <NavLink
+                      tag={RRNavLink}
+                      to="/userprofiles"
+                    >
+                      User Profiles
+                    </NavLink>
+                  )}
+                </NavItem>
+              </Nav>
             </Collapse>
             <Button
               color="primary"
