@@ -1,19 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchSingleChore } from '../../managers/choresManager.js';
-import { Button, Table } from 'reactstrap';
+import {
+  fetchAssignChore,
+  fetchSingleChore,
+  fetchUnassignChore,
+} from '../../managers/choresManager.js';
+import { Button, Form, FormGroup, Input, Label, Table } from 'reactstrap';
+import { fetchUserProfiles } from '../../managers/userProfilesManager.js';
+import { ChoreEdit } from './ChoreEdit.js';
 
 export const ChoresDetails = () => {
   const { id } = useParams();
-  const [chore, setChore] = useState({});
+  const [chore, setChore] = useState();
+  const [userProfiles, setUserProfiles] = useState();
   const navigate = useNavigate();
 
   const getSingleChore = () => {
     fetchSingleChore(id).then(setChore);
   };
 
+  const getUserProfiles = () => {
+    fetchUserProfiles(id).then(setUserProfiles);
+  };
+
   useEffect(() => {
     getSingleChore();
+    getUserProfiles();
   }, []);
 
   const calculateFilledStars = (num) => {
@@ -36,9 +48,37 @@ export const ChoresDetails = () => {
     }
   };
 
+  const handleNewCheck = (e) => {
+    const isChecked = e.target.checked;
+
+    if (isChecked) {
+      const assignmentToSend = {
+        choreId: chore.id,
+        userProfileId: parseInt(e.target.value),
+      };
+      fetchAssignChore(assignmentToSend).then(() => getSingleChore());
+    } else {
+      const unassignmentToSend = {
+        choreId: chore.id,
+        userProfileId: parseInt(e.target.value),
+      };
+      fetchUnassignChore(unassignmentToSend).then(() => getSingleChore());
+    }
+  };
+
+  if (!chore || !userProfiles) {
+    return null;
+  }
+
   return (
     <>
       <div className="container">
+        <br />
+        <ChoreEdit
+          chore={chore}
+          getSingleChore={getSingleChore}
+        />
+        <br />
         <br />
         <h2>{chore.name} Details:</h2>
         <Table>
@@ -58,7 +98,7 @@ export const ChoresDetails = () => {
             </tr>
           </tbody>
         </Table>
-        <br />
+        {/* <br />
         <h4>Chore Assignments:</h4>
         <Table>
           <thead>
@@ -87,7 +127,7 @@ export const ChoresDetails = () => {
               </tr>
             ))}
           </tbody>
-        </Table>
+        </Table> */}
         <br />
         <h4>Chore Completions:</h4>
         <Table>
@@ -101,15 +141,41 @@ export const ChoresDetails = () => {
             {chore.choreCompletions?.map((cc, index) => (
               <tr key={index}>
                 {
-                  <p>
+                  <td>
                     {`${cc.userProfile.firstName} ${cc.userProfile.lastName}`}
-                  </p>
+                  </td>
                 }
                 <td>{new Date(cc.completedOn).toLocaleDateString('en-US')}</td>
               </tr>
             ))}
           </tbody>
         </Table>
+        <br />
+        <h4>Chore Assignments:</h4>
+        <Form>
+          {userProfiles.map((up) => {
+            return (
+              <>
+                <FormGroup>
+                  <Label htmlFor={`up--${up.id}`}>
+                    {`${up.firstName} ${up.lastName}`}
+                  </Label>
+                  <Input
+                    name={`up--${up.id}`}
+                    type="checkbox"
+                    value={up.id}
+                    checked={
+                      !!chore.choreAssignments.find(
+                        (ca) => ca.userProfileId == up.id
+                      )
+                    }
+                    onChange={handleNewCheck}
+                  />
+                </FormGroup>
+              </>
+            );
+          })}
+        </Form>
       </div>
     </>
   );

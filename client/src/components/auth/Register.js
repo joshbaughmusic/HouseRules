@@ -1,16 +1,17 @@
-import { useState } from "react";
-import { register } from "../../managers/authManager";
-import { Link, useNavigate } from "react-router-dom";
-import { Button, FormFeedback, FormGroup, Input, Label } from "reactstrap";
+import { useState } from 'react';
+import { register } from '../../managers/authManager';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button, FormFeedback, FormGroup, Input, Label } from 'reactstrap';
 
 export default function Register({ setLoggedInUser }) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errors, setErrors] = useState({});
 
   const [passwordMismatch, setPasswordMismatch] = useState();
 
@@ -30,15 +31,29 @@ export default function Register({ setLoggedInUser }) {
         address,
         password,
       };
-      register(newUser).then((user) => {
-        setLoggedInUser(user);
-        navigate("/");
+      register(newUser).then((res) => {
+        if (res.errors) {
+          setErrors(res.errors)
+        } else {
+          setLoggedInUser(res);
+          navigate('/');
+        }
       });
     }
   };
 
   return (
-    <div className="container" style={{ maxWidth: "500px" }}>
+    <div
+      className="container"
+      style={{ maxWidth: '500px' }}
+    >
+      <div style={{ color: 'red' }}>
+        {Object.keys(errors).map((key) => (
+          <p key={key}>
+            {key}: {errors[key].join(',')}
+          </p>
+        ))}
+      </div>
       <h3>Sign Up</h3>
       <FormGroup>
         <Label>First Name</Label>

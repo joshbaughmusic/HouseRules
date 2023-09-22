@@ -7,8 +7,9 @@ export const ChoresNew = () => {
   const [newChore, setNewChore] = useState({
     name: '',
     difficulty: '',
-    choreFrequencyDays: ''
+    choreFrequencyDays: '',
   });
+  const [errors, setErrors] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -20,7 +21,13 @@ export const ChoresNew = () => {
 
   const handleSubmit = () => {
     if (newChore.name && newChore.difficulty && newChore.choreFrequencyDays) {
-      fetchCreateNewChore(newChore).then(() => navigate('/chores'));
+      fetchCreateNewChore(newChore).then((res) => {
+        if (res.errors) {
+          setErrors(res.errors);
+        } else {
+          navigate('/chores');
+        }
+      });
     }
   };
 
@@ -29,6 +36,13 @@ export const ChoresNew = () => {
       <div className="container">
         <br />
         <h2>Create a new chore:</h2>
+        <div style={{ color: 'red' }}>
+          {Object.keys(errors).map((key) => (
+            <p key={key}>
+              {key}: {errors[key].join(',')}
+            </p>
+          ))}
+        </div>
         <br />
         <Form>
           <FormGroup>
@@ -57,6 +71,7 @@ export const ChoresNew = () => {
             <Input
               type="number"
               min="1"
+              max="14"
               name="choreFrequencyDays"
               id="choreFrequencyDays"
               value={newChore.choreFrequencyDays}

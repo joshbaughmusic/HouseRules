@@ -29,3 +29,27 @@ export const fetchCompleteChore = (completion) => {
     headers: {"Content_Type": "application/json"}
   });
 };
+
+export const fetchAssignChore = (assignment) => {
+  const { choreId, userProfileId } = assignment;
+  return fetch(`${_apiUrl}/${choreId}/assign/?userId=${userProfileId}`, {
+    method: "POST",
+    headers: {"Content_Type": "application/json"}
+  });
+}
+
+export const fetchUnassignChore = (Unassignment) => {
+  const { choreId, userProfileId } = Unassignment;
+  return fetch(`${_apiUrl}/${choreId}/unassign/?userId=${userProfileId}`, {
+    method: "POST",
+    headers: {"Content_Type": "application/json"}
+  });
+}
+
+export const fetchUpdateChore = (updatedChore) => {
+  return fetch(`${_apiUrl}/${updatedChore.id}`, {
+    method: "PUT",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(updatedChore)
+  })
+}

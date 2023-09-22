@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HouseRules.Migrations
 {
     [DbContext(typeof(HouseRulesDbContext))]
-    [Migration("20230920204650_InitialCreate")]
+    [Migration("20230922162942_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -250,7 +250,7 @@ namespace HouseRules.Migrations
                         new
                         {
                             Id = "c3aaeb97-d2ba-4a53-a521-4eea61e59b35",
-                            ConcurrencyStamp = "9f4d3687-1138-4df0-9289-0ef760342134",
+                            ConcurrencyStamp = "9238aaa9-da3a-4031-bc59-8d2b08fd3b23",
                             Name = "Admin",
                             NormalizedName = "admin"
                         });
@@ -349,13 +349,13 @@ namespace HouseRules.Migrations
                         {
                             Id = "dbc40bc6-0829-4ac5-a3ed-180f5e916a5f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e14b3e5d-4972-43d9-b135-05c7f9872309",
+                            ConcurrencyStamp = "d92873ac-e8a3-4b60-860c-08f3f0d3f930",
                             Email = "admina@strator.comx",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAENssA/cyAm9Q+v5Je811KAk/qAdor+Ytm1HJCvLjJxQGNzIZx9SEwKu4j+1b/qx70w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEaobf7hWThgcGa0GYENYzv8XwjFC/3H39lhIsz5j6b1iz91bcZzDrvkXGt8/EHkUg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3cd1c577-9c31-472a-b323-e3111300909a",
+                            SecurityStamp = "ece4b698-795b-4b03-9129-cf9811f42341",
                             TwoFactorEnabled = false,
                             UserName = "Administrator"
                         });

@@ -35,5 +35,11 @@ export const register = (userProfile) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(userProfile),
-  }).then(() => fetch(_apiUrl + '/me').then((res) => res.json()));
+  }).then((res) => {
+    if (res.errors) {
+      return Promise.resolve(res.errors)
+    } else {
+      return fetch(_apiUrl + '/me').then((res) => res.json());
+    }
+  });
 };

@@ -130,19 +130,24 @@ public class ChoreController : ControllerBase
     {
         Chore choreToAssign = _dbContext.Chores.SingleOrDefault(c => c.Id == id);
 
+        UserProfile userProfileToInclude = _dbContext.UserProfiles.SingleOrDefault(up => up.Id == int.Parse(userId));
+
         if(choreToAssign == null)
         {
-            return NotFound();
+            return NotFound("Not a valid choreId");
         }
-        else if (int.Parse(userId) == null)
+        else if (userProfileToInclude == null)
         {
-            return BadRequest("Must include userId querey string");
+            return NotFound("Not a valid userId, or one was not included");
         }
+
 
         ChoreAssignment choreAssignment = new ChoreAssignment()
         {
             UserProfileId = int.Parse(userId),
-            ChoreId = id
+            userProfile = userProfileToInclude,
+            ChoreId = id,
+            Chore = choreToAssign
         };
 
         _dbContext.ChoreAssignments.Add(choreAssignment);
@@ -154,23 +159,21 @@ public class ChoreController : ControllerBase
     }
 
     [HttpPost("{id}/unassign")]
-    // [Authorize(Roles = "Admin")]
-    public IActionResult unassignChore(int id, string userId)
+    [Authorize(Roles = "Admin")]
+    public IActionResult unassignChore(int id, int? userId)
     {
-        Chore choreToUnassign = _dbContext.Chores.SingleOrDefault(c => c.Id == id);
+        List<ChoreAssignment> choreAssignmentToRemove = _dbContext.ChoreAssignments.Where(ca => ca.ChoreId == id && ca.UserProfileId == userId).ToList();
 
-        if(choreToUnassign == null)
+        if(choreAssignmentToRemove.Count == 0)
         {
             return NotFound();
         }
-        else if (int.Parse(userId) == null)
+        else if (userId == null)
         {
             return BadRequest("Must include userId querey string");
         }
 
-        List<ChoreAssignment> choresToUnassign = _dbContext.ChoreAssignments.Where(ca => ca.UserProfileId == int.Parse(userId)).ToList();
-
-        _dbContext.ChoreAssignments.RemoveRange(choresToUnassign);
+        _dbContext.ChoreAssignments.RemoveRange(choreAssignmentToRemove);
 
         _dbContext.SaveChanges();
 
