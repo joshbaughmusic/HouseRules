@@ -6,6 +6,9 @@ import Register from './auth/Register';
 import { Home } from './Home.js';
 import { UserProfileList } from './userProfiles/UserProfileList.js';
 import { UserProfileDetails } from './userProfiles/UserProfileDetails.js';
+import { ChoresList } from './chores/ChoresList.js';
+import { ChoresDetails } from './chores/ChoresDetails.js';
+import { ChoresNew } from './chores/ChoresNew.js';
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
   return (
@@ -41,6 +44,35 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
             </AuthorizedRoute>
           }
         />
+        <Route path="chores">
+          <Route
+            index
+            element={
+              <AuthorizedRoute loggedInUser={loggedInUser}>
+                <ChoresList loggedInUser={loggedInUser} />
+              </AuthorizedRoute>
+            }
+          />
+          <Route
+            path=":id"
+            element={
+              <AuthorizedRoute loggedInUser={loggedInUser}>
+                <ChoresDetails loggedInUser={loggedInUser} />
+              </AuthorizedRoute>
+            }
+          />
+          <Route
+            path="new"
+            element={
+              <AuthorizedRoute
+                roles={['Admin']}
+                loggedInUser={loggedInUser}
+              >
+                <ChoresNew loggedInUser={loggedInUser} />
+              </AuthorizedRoute>
+            }
+          />
+        </Route>
 
         <Route
           path="login"

@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { fetchSingleUserProfile } from '../../managers/userProfilesManager.js';
-import { Table } from 'reactstrap';
+import { useNavigate, useParams } from 'react-router-dom';
+import { fetchSingleChore } from '../../managers/choresManager.js';
+import { Button, Table } from 'reactstrap';
 
-export const UserProfileDetails = () => {
+export const ChoresDetails = () => {
   const { id } = useParams();
-  const [userProfile, setUserProfile] = useState({});
+  const [chore, setChore] = useState({});
+  const navigate = useNavigate();
 
-  const getSingleUserProfile = () => {
-    fetchSingleUserProfile(id).then(setUserProfile);
+  const getSingleChore = () => {
+    fetchSingleChore(id).then(setChore);
   };
 
   useEffect(() => {
-    getSingleUserProfile();
+    getSingleChore();
   }, []);
 
   const calculateFilledStars = (num) => {
@@ -39,22 +40,21 @@ export const UserProfileDetails = () => {
     <>
       <div className="container">
         <br />
-        <h2>
-          {userProfile.firstName} {userProfile.lastName} Details:
-        </h2>
+        <h2>{chore.name} Details:</h2>
         <Table>
           <thead>
             <tr>
-              <td>Address</td>
-              <td>Email</td>
-              {userProfile.username ? <td>User Name</td> : ''}
+              <td>Difficulty</td>
+              <td>Frequency</td>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>{userProfile.address}</td>
-              <td>{userProfile.email}</td>
-              {userProfile.username ? <td>{userProfile.username}</td> : ''}
+              <td>
+                {calculateFilledStars(chore.difficulty)}
+                {calculateEmptyStars(chore.difficulty)}
+              </td>
+              <td>Every {chore.choreFrequencyDays} days</td>
             </tr>
           </tbody>
         </Table>
@@ -63,20 +63,27 @@ export const UserProfileDetails = () => {
         <Table>
           <thead>
             <tr>
-              <td>Chore</td>
-              <td>Difficulty</td>
-              <td>Frequency</td>
+              <td>Person</td>
+              <td></td>
             </tr>
           </thead>
           <tbody>
-            {userProfile.choreAssignments?.map((ca, index) => (
+            {chore.choreAssignments?.map((ca, index) => (
               <tr key={index}>
-                <td>{ca.chore.name}</td>
                 <td>
-                  {calculateFilledStars(ca.chore.difficulty)}
-                  {calculateEmptyStars(ca.chore.difficulty)}
+                  {`${ca.userProfile.firstName} ${ca.userProfile.lastName}`}
                 </td>
-                <td>Every {ca.chore.choreFrequencyDays} days</td>
+                <td>
+                  <Button
+                    value={ca.userProfile.id}
+                    color="primary"
+                    onClick={() =>
+                      navigate(`/userprofiles/${ca.userProfile.id}`)
+                    }
+                  >
+                    Details
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -86,14 +93,18 @@ export const UserProfileDetails = () => {
         <Table>
           <thead>
             <tr>
-              <td>Chore</td>
+              <td>Person</td>
               <td>Completed On</td>
             </tr>
           </thead>
           <tbody>
-            {userProfile.choreCompletions?.map((cc, index) => (
+            {chore.choreCompletions?.map((cc, index) => (
               <tr key={index}>
-                <td>{cc.chore.name}</td>
+                {
+                  <p>
+                    {`${cc.userProfile.firstName} ${cc.userProfile.lastName}`}
+                  </p>
+                }
                 <td>{new Date(cc.completedOn).toLocaleDateString('en-US')}</td>
               </tr>
             ))}
