@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { fetchDeleteChore, fetchChores, fetchCompleteChore } from '../../managers/choresManager.js';
+import {
+  fetchDeleteChore,
+  fetchChores,
+  fetchCompleteChore,
+} from '../../managers/choresManager.js';
 import { Button, Table } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,13 +46,10 @@ export const ChoresList = ({ loggedInUser }) => {
   const handleComplete = (e) => {
     const newCompletion = {
       choreId: e.target.value,
-      userProfileId: loggedInUser.id
-    }
-    fetchCompleteChore(newCompletion);
-
-  }
-
-  
+      userProfileId: loggedInUser.id,
+    };
+    fetchCompleteChore(newCompletion).then(() => getChores());
+  };
 
   return (
     <>
@@ -81,7 +82,13 @@ export const ChoresList = ({ loggedInUser }) => {
           <tbody>
             {chores.map((c, index) => (
               <tr key={index}>
-                <td>{c.name}</td>
+                {c.overdue ? (
+                  <td>
+                    <span className="overdue">{c.name}</span>
+                  </td>
+                ) : (
+                  <td>{c.name}</td>
+                )}
                 <td>
                   {calculateFilledStars(c.difficulty)}
                   {calculateEmptyStars(c.difficulty)}

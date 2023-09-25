@@ -22,7 +22,7 @@ public class ChoreController : ControllerBase
     // [Authorize]
     public IActionResult GetAllChores()
     {
-        return Ok(_dbContext.Chores.ToList());
+        return Ok(_dbContext.Chores.Include(c => c.ChoreCompletions).ToList());
     }
 
     [HttpGet("{id}")]

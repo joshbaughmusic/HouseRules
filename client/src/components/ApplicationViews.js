@@ -9,6 +9,7 @@ import { UserProfileDetails } from './userProfiles/UserProfileDetails.js';
 import { ChoresList } from './chores/ChoresList.js';
 import { ChoresDetails } from './chores/ChoresDetails.js';
 import { ChoresNew } from './chores/ChoresNew.js';
+import { MyProfile } from './userProfiles/MyProfile.js';
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
   return (
@@ -19,6 +20,14 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
           element={
             <AuthorizedRoute loggedInUser={loggedInUser}>
               <Home />
+            </AuthorizedRoute>
+          }
+        />
+        <Route
+          path="myprofile"
+          element={
+            <AuthorizedRoute loggedInUser={loggedInUser}>
+              <MyProfile loggedInUser={loggedInUser} />
             </AuthorizedRoute>
           }
         />
